@@ -30,7 +30,7 @@ DELETE http://localhost:4000/user/remove-user/1
 GET http://localhost:4000/product/getproducts
 
 #####
-GET http://localhost:4000/product/getproduct/1
+GET http://localhost:4000/product/getproduct/3
 
 ######
 POST http://localhost:4000/product/create-product-async
@@ -39,7 +39,7 @@ Content-Type: application/json
 {
     "id" : 3,
     "name" : "Monitor",
-    "price": 24000
+    "price": 34000
 }
 
 #####
@@ -47,7 +47,10 @@ PUT http://localhost:4000/product/update-product
 Content-Type: application/json
 
 {
-    "id" : 1,
-    "name" : "ravi cooler",
+    "id" : 3,
+    "name" : "Monitor",
     "price": 20000
 }
+
+#####
+DELETE http://localhost:4000/product/remove-product/3

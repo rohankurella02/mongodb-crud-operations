@@ -14,27 +14,30 @@ productApp.use(exp.json());
 
 
 //Route for Get request
-productApp.get("/getproducts", (request, response) => {
+productApp.get("/getproducts", expressAsyncHandler(async (request, response) => {
+    
+    //get the product collection object
+    let productCollectionObject = request.app.get("productCollectionObject");
+    let products = await productCollectionObject.find().toArray();
     response.send({ message: "all products", payload: products });
-  });
+}));
+
   
-  //Route for Get request by ID
-  productApp.get("/getproduct/:id", (request, response) => {
+//Route for Get request by ID
+productApp.get("/getproduct/:id", expressAsyncHandler(async (request, response) => {
     //get parameter from the url
     let productId = +request.params.id;
-  
-    //search user obj by id
-    let productObj = products.find((productObj) => productObj.id == productId);
-    console.log(productObj);
-    //if user not found
-    if (productObj == undefined) {
-      response.send({ message: "Product not existed" });
+
+    //get productCollectionObject
+    let productCollectionObject = request.app.get("productCollectionObject");
+    let products = await productCollectionObject.findOne({id : productId});
+    if(products == null){
+        response.send({ message: "Product not existed" });
     }
-    //if user found
-    else {
-      response.send({ message: "Product found", payload: productObj });
+    else{
+        response.send({ message: "Product found", payload: products });
     }
-  });
+}));
   
   //Route for POST Request
   productApp.post("/create-product", (request, response) => {
@@ -73,7 +76,7 @@ productApp.get("/getproducts", (request, response) => {
         });
     });
 
-    //creating a product using async and await
+    //creating a product using async and await and expressAsyncHandler
     productApp.post("/create-product-async", expressAsyncHandler (async (request, response) => {
         //get product object from the request
         let prodObj = request.body;
@@ -85,38 +88,36 @@ productApp.get("/getproducts", (request, response) => {
     }));
   
   //Route for PUT Request
-  productApp.put("/update-product", (request, response) => {
+  productApp.put("/update-product", expressAsyncHandler(async (request, response) => {
     //get modified user obj
     let modifiedObj = request.body;
+
+    //get productCollectionObject
+    let productCollectionObject = request.app.get("productCollectionObject");
+
+    let result = await productCollectionObject.updateOne({id: modifiedObj.id}, {$set: modifiedObj});
   
-    //logic to modify existing user
-      let productObj = products.find((productObj) => productObj.id == modifiedObj.id);
-      if (productObj == undefined) {
-          response.send({ message: "User not existed" });
-      }
-      else {
-          productObj.name = modifiedObj.name;
-          productObj.age = modifiedObj.age;
-          response.send({ message: "Product updated" });
-      }
-  });
+    if(result.modifiedCount == 0){
+        response.send({ message: "Product not existed" });
+    }
+    else{
+        response.send({ message: "Product updated" });
+    }
+    
+  }));
   
   
   //Route for DELETE Request
-  productApp.delete("/remove-product/:id", (request, response) => {
+  productApp.delete("/remove-product/:id", expressAsyncHandler( async (request, response) => {
     //get id of user from the url to remove
     let productId = request.params.id;
   
-    //logic to identify and remove user
-    let productObj = products.find((productObj) => productObj.id == productId);
-      if (productObj == undefined) {
-          response.send({ message: "Product not existed" });
-      }
-      else {
-          products = products.filter((productObj) => productObj.id != productId);
-          response.send({ message: "Product removed" });
-      }
-    //send response
-  });
+    //get productCollectionObject
+    let productCollectionObject = request.app.get("productCollectionObject");
+    let result = await productCollectionObject.deleteOne({id: productId});
+    response.send({message: "deleted successfully"});
+
+
+  }));
 
   module.exports = productApp;
