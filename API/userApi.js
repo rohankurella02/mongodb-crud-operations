@@ -70,7 +70,7 @@ userApp.put("/update-user", expressAsyncHandler( async (request, response) => {
 //create a route to delete user by id
 userApp.delete("/remove-user/:id", expressAsyncHandler( async(request, response) => {
   //get id of user to remove
-  let userId = request.params.id;
+  let userId = (+request.params.id);
 
   let userCollectionObject = request.app.get("userCollectionObject");
   let result = await userCollectionObject.deleteOne({id: userId})

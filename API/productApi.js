@@ -110,7 +110,7 @@ productApp.get("/getproduct/:id", expressAsyncHandler(async (request, response) 
   //Route for DELETE Request
   productApp.delete("/remove-product/:id", expressAsyncHandler( async (request, response) => {
     //get id of user from the url to remove
-    let productId = request.params.id;
+    let productId = (+request.params.id);
   
     //get productCollectionObject
     let productCollectionObject = request.app.get("productCollectionObject");

@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 #####
-DELETE http://localhost:4000/user/remove-user/20000
+DELETE http://localhost:4000/user/remove-user/3
 
 #####
 GET http://localhost:4000/product/getproducts
