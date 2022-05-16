@@ -10,14 +10,14 @@ const productApp = exp.Router();
 productApp.use(exp.json());
 
 
-//create route to handle '/getproducts' path
+//Route for Get request
 productApp.get("/getproducts", (request, response) => {
     response.send({ message: "all products", payload: products });
   });
   
-  //create route to handle '/getuser/id'
+  //Route for Get request by ID
   productApp.get("/getproduct/:id", (request, response) => {
-    //get url param
+    //get parameter from the url
     let productId = +request.params.id;
   
     //search user obj by id
@@ -33,11 +33,10 @@ productApp.get("/getproducts", (request, response) => {
     }
   });
   
-  //create a route to 'create-user'
+  //Route for POST Request
   productApp.post("/create-product", (request, response) => {
-    //get user obj sent by client
-    //let newProduct = request.body;
-
+  
+    //get user object sent by the client
     //get product object from the request
     let prodObj = request.body;
 
@@ -45,11 +44,11 @@ productApp.get("/getproducts", (request, response) => {
     let productCollectionObject = request.app.get("productCollectionObject");
     
 
-    //insert productObj
+    //insert productObj into product collection
     productCollectionObject.insertOne(prodObj, (err, result) => {
         if(err) {
-            //response.send({ message: "Product not created" });
-            console.log("error in creating product", err);
+            response.send({ message: "Product not created" });
+            //console.log("error in creating product", err);
         }
         else {
             response.send({ message: "Product created" });
@@ -62,6 +61,7 @@ productApp.get("/getproducts", (request, response) => {
     productApp.post("/create-product-promise", (request, response) => {
         //get product object from the request
         let prodObj = request.body;
+        //get product collection object
         let productCollectionObject = request.app.get("productCollectionObject");
         productCollectionObject.insertOne(prodObj).then((result) => {
             response.send({ message: "Product created" });
@@ -81,7 +81,7 @@ productApp.get("/getproducts", (request, response) => {
         response.send({ message: "Product created" });
     });
   
-  //create a route to modify user data
+  //Route for PUT Request
   productApp.put("/update-product", (request, response) => {
     //get modified user obj
     let modifiedObj = request.body;
@@ -96,13 +96,12 @@ productApp.get("/getproducts", (request, response) => {
           productObj.age = modifiedObj.age;
           response.send({ message: "Product updated" });
       }
-    //send response
   });
   
   
-  //create a route to delete user by id
+  //Route for DELETE Request
   productApp.delete("/remove-product/:id", (request, response) => {
-    //get id of user to remove
+    //get id of user from the url to remove
     let productId = request.params.id;
   
     //logic to identify and remove user
