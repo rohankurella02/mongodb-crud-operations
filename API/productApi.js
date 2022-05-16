@@ -9,20 +9,8 @@ const productApp = exp.Router();
 
 productApp.use(exp.json());
 
-let products = [
-    {
-        id: 1,
-        name: "laptop",
-        price: 20000,
-    },
-    {
-        id: 2,
-        name: "mobile",
-        price: 10000,
-    }
-];
 
-//create route to handle '/getusers' path
+//create route to handle '/getproducts' path
 productApp.get("/getproducts", (request, response) => {
     response.send({ message: "all products", payload: products });
   });
