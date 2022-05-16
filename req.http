@@ -8,7 +8,7 @@ POST http://localhost:4000/user/create-user
 Content-Type: application/json
 
 {
-    "id" : 3,
+    "id" : 2,
     "name" : "kiran",
     "age": 24
 }
@@ -24,21 +24,21 @@ Content-Type: application/json
 }
 
 #####
-DELETE http://localhost:4000/user/remove-user/1
+DELETE http://localhost:4000/user/remove-user/20000
 
 #####
 GET http://localhost:4000/product/getproducts
 
 #####
-GET http://localhost:4000/product/getproduct/3
+GET http://localhost:4000/product/getproduct/2
 
 ######
 POST http://localhost:4000/product/create-product-async
 Content-Type: application/json
 
 {
-    "id" : 3,
-    "name" : "Monitor",
+    "id" : 2,
+    "name" : "Display",
     "price": 34000
 }
 
@@ -53,4 +53,4 @@ Content-Type: application/json
 }
 
 #####
-DELETE http://localhost:4000/product/remove-product/3
+DELETE http://localhost:4000/product/remove-product/2

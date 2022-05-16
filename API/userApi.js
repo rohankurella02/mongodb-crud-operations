@@ -1,6 +1,7 @@
 //create router to handle user api requests
 const exp = require("express");
 const userApp = exp.Router();
+const expressAsyncHandler = require("express-async-handler");
 
 
 //to extract body of request object
@@ -10,27 +11,30 @@ userApp.use(exp.json());
 //Create REST API
 
 //create route to handle '/getusers' path
-userApp.get("/getusers", (request, response) => {
-  response.send({ message: "all users", payload: users });
-});
+userApp.get("/getusers", expressAsyncHandler( async (request, response) => {
+
+    let userCollectionObject = request.app.get("userCollectionObject");
+    let result = await userCollectionObject.find().toArray();
+    
+    response.send({ message: "all users", payload: result});
+}));
 
 //create route to handle '/getuser/id'
-userApp.get("/getuser/:id", (request, response) => {
+userApp.get("/getuser/:id", expressAsyncHandler( async (request, response) => {
   //get url param
   let userId = +request.params.id;
+  
+  let userCollectionObject = request.app.get("userCollectionObject");
+  let result = userCollectionObject.findOne({id: userId});
 
-  //search user obj by id
-  let userObj = users.find((userObj) => userObj.id == userId);
-  console.log(userObj);
-  //if user not found
-  if (userObj == undefined) {
-    response.send({ message: "User not existed" });
+  if(result == null) {
+      response.send({message: "User Does Not Exist", payload: result});
   }
-  //if user found
   else {
-    response.send({ message: "User found", payload: userObj });
+      response.send({message: "User Found", payload: result});
   }
-});
+
+}));
 
 //create a route to 'create-user'
 userApp.post("/create-user", async (request, response, next) => {
@@ -51,39 +55,28 @@ userApp.post("/create-user", async (request, response, next) => {
 });
 
 //create a route to modify user data
-userApp.put("/update-user", (request, response) => {
+userApp.put("/update-user", expressAsyncHandler( async (request, response) => {
   //get modified user obj
   let modifiedObj = request.body;
 
-  //logic to modify existing user
-    let userObj = users.find((userObj) => userObj.id == modifiedObj.id);
-    if (userObj == undefined) {
-        response.send({ message: "User not existed" });
-    }
-    else {
-        userObj.name = modifiedObj.name;
-        userObj.age = modifiedObj.age;
-        response.send({ message: "User updated" });
-    }
-  //send response
-});
+  let userCollectionObject = request.app.get("userCollectionObject");
+  let result = await userColelctionObject.updateOne({id: modifiedObj.id}, {$set : modifiedObj});
+
+  response.send({message: "User Updated"});
+
+}));
 
 
 //create a route to delete user by id
-userApp.delete("/remove-user/:id", (request, response) => {
+userApp.delete("/remove-user/:id", expressAsyncHandler( async(request, response) => {
   //get id of user to remove
   let userId = request.params.id;
 
-  //logic to identify and remove user
-  let userObj = users.find((userObj) => userObj.id == userId);
-    if (userObj == undefined) {
-        response.send({ message: "User not existed" });
-    }
-    else {
-        users = users.filter((userObj) => userObj.id != userId);
-        response.send({ message: "User removed" });
-    }
-  //send response
-});
+  let userCollectionObject = request.app.get("userCollectionObject");
+  let result = await userCollectionObject.deleteOne({id: userId})
+
+  response.send({message: result});
+
+}));
 
 module.exports = userApp;

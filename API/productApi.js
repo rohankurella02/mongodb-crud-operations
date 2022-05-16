@@ -114,9 +114,13 @@ productApp.get("/getproduct/:id", expressAsyncHandler(async (request, response) 
   
     //get productCollectionObject
     let productCollectionObject = request.app.get("productCollectionObject");
-    let result = await productCollectionObject.deleteOne({id: productId});
-    response.send({message: "deleted successfully"});
-
+    let result = await productCollectionObject.deleteOne({"id": productId}, function(err, result){
+        if(err){
+            response.send({ message: "Product not deleted" });
+            }
+            else{
+                response.send({ message: "Product deleted" });
+                }});
 
   }));
 
