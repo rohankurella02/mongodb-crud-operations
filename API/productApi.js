@@ -1,12 +1,15 @@
 const { request } = require("express");
 const exp = require("express");
 const { Db } = require("mongodb");
+
+const expressAsyncHandler = require("express-async-handler");
 const productApp = exp.Router();
 
 
 
 //Create Product REST API
 
+//to extract body of request object
 productApp.use(exp.json());
 
 
@@ -71,7 +74,7 @@ productApp.get("/getproducts", (request, response) => {
     });
 
     //creating a product using async and await
-    productApp.post("/create-product-async", async (request, response) => {
+    productApp.post("/create-product-async", expressAsyncHandler (async (request, response) => {
         //get product object from the request
         let prodObj = request.body;
         //get productCollectionObject
@@ -79,7 +82,7 @@ productApp.get("/getproducts", (request, response) => {
         let result = await productCollectionObject.insertOne(prodObj);
         //send response
         response.send({ message: "Product created" });
-    });
+    }));
   
   //Route for PUT Request
   productApp.put("/update-product", (request, response) => {
