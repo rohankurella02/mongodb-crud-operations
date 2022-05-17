@@ -3,14 +3,24 @@ GET http://localhost:4000/user/getuser/1
 ######
 GET http://localhost:4000/user/getusers
 
+######
+POST http://localhost:4000/user/login
+Content-Type: application/json
+
+{
+    "username": "Rohan",
+    "password": "Rohan"
+}
+
 #####
 POST http://localhost:4000/user/create-user
 Content-Type: application/json
 
 {
-    "id" : 2,
-    "name" : "kiran",
-    "age": 24
+    "username": "Kiran",
+    "password": "Kiran",
+    "email": "kiran@email.com",
+    "city": "Hyderabad"
 }
 
 #####
